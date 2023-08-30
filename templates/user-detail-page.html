@@ -2,5 +2,9 @@
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 <img src= "{{ user.image_url }}">
 <button>Edit</button>
+
+<form method="POST" action="/users/{{ user.id }}/delete">
 <button>Delete</button>
+</form>
+
 {% endblock %}

@@ -13,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
+app.config['SECRET_KEY'] = "super-secret"
+
 app.debug = True
 debug = DebugToolbarExtension(app)
 
@@ -47,7 +49,7 @@ def process_user_form():
     """ Add user to database and show users page."""
     first_name = request.form["first-name"]
     last_name = request.form["last-name"]
-    image_url = request.form["image-URL"]
+    image_url = request.form["image-url"]
 
     user = User(first_name = first_name,
                 last_name = last_name,
@@ -64,8 +66,38 @@ def show_user(id):
     user = User.query.get(id)
     return render_template("user-detail-page.html", user = user)
 
+
 @app.get("/users/<int:id>/edit")
 def edit_user(id):
     """Display edit form"""
-    
+
     return render_template("user-edit-page.html", id=id)
+
+
+@app.post("/users/<int:id>/edit")
+def process_edit_form(id):
+    """Edit user info and save to database."""
+    user = User.query.get(id)
+
+    first_name = request.form["first-name"]
+    last_name = request.form["last-name"]
+    image_url = request.form["image-url"]
+
+    user.first_name = first_name
+    user.last_name = last_name
+    user.image_url = image_url
+
+    db.session.commit()
+
+    return redirect("/users")
+
+
+@app.post("/users/<int:id>/delete")
+def delete_user(id):
+    """Delete user from database."""
+
+    user = User.query.get(id)
+    user.delete()
+    db.session.commit()
+
+    return redirect("/users")
