@@ -41,3 +41,31 @@ def new_user_form():
     """Display form to add new users."""
 
     return render_template("new-user-form.html")
+
+@app.post("/users/new")
+def process_user_form():
+    """ Add user to database and show users page."""
+    first_name = request.form["first-name"]
+    last_name = request.form["last-name"]
+    image_url = request.form["image-URL"]
+
+    user = User(first_name = first_name,
+                last_name = last_name,
+                image_url = image_url)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect("/users")
+
+@app.get("/users/<int:id>")
+def show_user(id):
+    """Displays user information"""
+    user = User.query.get(id)
+    return render_template("user-detail-page.html", user = user)
+
+@app.get("/users/<int:id>/edit")
+def edit_user(id):
+    """Display edit form"""
+    
+    return render_template("user-edit-page.html", id=id)
