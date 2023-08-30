@@ -18,24 +18,24 @@ app.config['SECRET_KEY'] = "super-secret"
 app.debug = True
 debug = DebugToolbarExtension(app)
 
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
 
 connect_db(app)
 
-
-# TODO: where does this go?
-db.create_all()
 
 @app.get("/")
 def homepage():
     """Redirect to list of all users."""
 
-    return redirect("/")
+    return redirect("/users")
 
 @app.get("/users")
 def display_users():
     """Show all users."""
+    users = User.query.all()
 
-    return render_template("user-listing.html")
+    return render_template("user-listing.html", users = users)
 
 
 @app.get("/users/new")
@@ -47,9 +47,9 @@ def new_user_form():
 @app.post("/users/new")
 def process_user_form():
     """ Add user to database and show users page."""
-    first_name = request.form["first-name"]
-    last_name = request.form["last-name"]
-    image_url = request.form["image-url"]
+    first_name = request.form.get("first-name")
+    last_name = request.form.get("last-name")
+    image_url = request.form.get("image-url")
 
     user = User(first_name = first_name,
                 last_name = last_name,
@@ -79,9 +79,9 @@ def process_edit_form(id):
     """Edit user info and save to database."""
     user = User.query.get(id)
 
-    first_name = request.form["first-name"]
-    last_name = request.form["last-name"]
-    image_url = request.form["image-url"]
+    first_name = request.form.get("first-name")
+    last_name = request.form.get("last-name")
+    image_url = request.form.get("image-url")
 
     user.first_name = first_name
     user.last_name = last_name
@@ -97,7 +97,8 @@ def delete_user(id):
     """Delete user from database."""
 
     user = User.query.get(id)
-    user.delete()
+
+    db.session.delete(user)
     db.session.commit()
 
     return redirect("/users")

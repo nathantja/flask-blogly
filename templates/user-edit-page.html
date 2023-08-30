@@ -2,7 +2,7 @@
 
 <h1>Edit a user</h1>
 
-<form method="POST" action="/user/{{ id }}/edit">
+<form method="POST" action="/users/{{ id }}/edit">
   <label for="first-name">First Name</label>
   <input type="text" name="first-name">
 
@@ -12,8 +12,9 @@
   <label for="image-URL">Image URL</label>
   <input type="URL" name="image-URL">
 
-  <a href="/user/{{ id }}">Cancel</a>
-  <button>Save</button>
+  <a href="/users/{{ id }}">Cancel</a>
+
+  <button action="submit">Save</button>
 </form>
 
 {% endblock %}
