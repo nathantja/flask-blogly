@@ -1,28 +1,33 @@
 {% extends 'base.html' %}
 
+<!-- user page renders correctly! -->
+
 {% block title %}Blogly: {{ user.first_name }}{% endblock %}
 
 {% block content %}
+
+
+<!-- user page renders correctly! -->
+
+<img class="user-img" src="{{ user.image_url }}">
+
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
-<div class="container-sm">
-  <img class="w-10 p-1" src="{{ user.image_url }}"> <!--FIXME-->
-</div>
-
+<div class="container user-btns">
 <form action="/users/{{ user.id }}/edit" method="get">
   <button class="btn btn-primary">Edit</button>
 </form>
 
 <form method="POST" action="/users/{{ user.id }}/delete">
   <button class="btn btn-danger">Delete</button>
-  <!-- user page renders correctly! -->
 </form>
+</div>
 
-<div>
+<div class="container user-posts">
   <h2>Posts</h2>
   <ul>
     {% for post in posts %}
-    <li><a href="">{{ post.title }}</a></li>
+    <li><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
   <a href="/users/{{ user.id }}/posts/new" class="btn btn-primary">Add Post</a>

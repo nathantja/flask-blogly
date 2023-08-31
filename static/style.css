@@ -1,0 +1,18 @@
+.blogly-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-img {
+  max-width: 256px;
+  margin: 30px 0px;
+}
+
+.user-btns {
+  display: flex;
+}
+
+.user-posts {
+  margin: 30px 0px;
+}

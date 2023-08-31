@@ -58,8 +58,6 @@ def process_user_form():
 
     if not image_url:
         image_url = DEFAULT_IMG_URL
-    # print('image_url', image_url)
-    # breakpoint()
 
     user = User(first_name=first_name,
                 last_name=last_name,
@@ -75,7 +73,8 @@ def process_user_form():
 def show_user(id):
     """Displays user information"""
     user = User.query.get_or_404(id)
-    return render_template("user-detail-page.html", user=user)
+    posts = user.posts
+    return render_template("user-detail-page.html", user=user, posts=posts)
 
 
 @app.get("/users/<int:id>/edit")
@@ -109,7 +108,6 @@ def process_edit_form(id):
 @app.post("/users/<int:id>/delete")
 def delete_user(id):
     """Delete user from database."""
-
     user = User.query.get_or_404(id)
 
     db.session.delete(user)
@@ -121,7 +119,6 @@ def delete_user(id):
 @app.get("/users/<int:id>/posts/new")
 def new_post_form(id):
     """Render form to add post."""
-
     user = User.query.get_or_404(id)
 
     return render_template("post-new-form.html", user=user)
@@ -130,7 +127,6 @@ def new_post_form(id):
 @app.post("/users/<int:id>/posts/new")
 def process_post_form(id):
     """Save post to database."""
-
     post_title = request.form.get("title")
     post_content = request.form.get("content")
 
@@ -138,28 +134,28 @@ def process_post_form(id):
     db.session.add(post)
     db.session.commit()
 
-    return redirect("/users/<int:id>")
+    return redirect(f"/users/{post.user_id}")
+
 
 @app.get("/posts/<int:post_id>")
 def show_post(post_id):
     """Display post page"""
-
     post = Post.query.get_or_404(post_id)
 
     return render_template("post-detail-page.html", post=post)
 
+
 @app.get("/posts/<int:post_id>/edit")
 def edit_post(post_id):
     """Display post edit form with values filled in"""
-    
     post = Post.query.get_or_404(post_id)
 
     return render_template("post-edit-page.html", post=post)
 
+
 @app.post("/posts/<int:post_id>/edit")
 def process_post_edit(post_id):
     """Edit post information and save to database"""
-
     post_title = request.form.get("title")
     post_content = request.form.get("content")
 
@@ -172,10 +168,10 @@ def process_post_edit(post_id):
 
     return redirect(f"/posts/{post_id}")
 
+
 @app.post("/posts/<int:post_id>/delete")
 def delete_post(post_id):
     """Deletes post from database"""
-
     post = Post.query.get_or_404(post_id)
     user_id = post.user_id
 
