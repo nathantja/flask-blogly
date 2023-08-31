@@ -8,16 +8,16 @@
 
 <p>{{ post.content }}</p>
 
-<p><i>By {{ user.first_name }} {{ user.last_name }}</i></p>
+<p><i>By {{ post.user.first_name }} {{ post.user.last_name }}</i></p>
 
 
-<a href="" class="btn btn-secondary">Cancel</a>
+<a href="/users/{{ post.user_id }}" class="btn btn-secondary">Cancel</a>
 
-<form action="/post/{{ user.id }}/edit" method="GET">
+<form action="/posts/{{ post.id }}/edit" method="GET">
 <button class="btn btn-primary">Edit</button>
 </form>
 
-<form action="/post/{{ user.id }}/delete" method="POST" >
+<form action="/posts/{{ post.id }}/delete" method="POST" >
 <button class="btn btn-danger">Delete</button>
 </form>
 

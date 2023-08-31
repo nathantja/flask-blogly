@@ -131,10 +131,55 @@ def new_post_form(id):
 def process_post_form(id):
     """Save post to database."""
 
-    post_title = request.form.get("content")
-    post_content = request.form.get("title")
+    post_title = request.form.get("title")
+    post_content = request.form.get("content")
 
     post = Post(title=post_title, content=post_content, user_id=id)
     db.session.add(post)
+    db.session.commit()
 
     return redirect("/users/<int:id>")
+
+@app.get("/posts/<int:post_id>")
+def show_post(post_id):
+    """Display post page"""
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post-detail-page.html", post=post)
+
+@app.get("/posts/<int:post_id>/edit")
+def edit_post(post_id):
+    """Display post edit form with values filled in"""
+    
+    post = Post.query.get_or_404(post_id)
+
+    return render_template("post-edit-page.html", post=post)
+
+@app.post("/posts/<int:post_id>/edit")
+def process_post_edit(post_id):
+    """Edit post information and save to database"""
+
+    post_title = request.form.get("title")
+    post_content = request.form.get("content")
+
+    post = Post.query.get_or_404(post_id)
+
+    post.title = post_title
+    post.content = post_content
+
+    db.session.commit()
+
+    return redirect(f"/posts/{post_id}")
+
+@app.post("/posts/<int:post_id>/delete")
+def delete_post(post_id):
+    """Deletes post from database"""
+
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user_id
+
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
