@@ -24,6 +24,8 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 connect_db(app)
 
 
+DEFAULT_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/b/b5/Windows_10_Default_Profile_Picture.svg"
+
 @app.get("/")
 def homepage():
     """Redirect to list of all users."""
@@ -49,7 +51,10 @@ def process_user_form():
     """ Add user to database and show users page."""
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
-    image_url = request.form.get("image-url")
+    image_url = request.form.get("image-url", DEFAULT_IMG_URL)
+
+    print('image_url', image_url)
+    breakpoint()
 
     user = User(first_name = first_name,
                 last_name = last_name,
@@ -63,25 +68,25 @@ def process_user_form():
 @app.get("/users/<int:id>")
 def show_user(id):
     """Displays user information"""
-    user = User.query.get(id)
+    user = User.query.get_or_404(id)
     return render_template("user-detail-page.html", user = user)
 
 
 @app.get("/users/<int:id>/edit")
 def edit_user(id):
-    """Display edit form"""
-
-    return render_template("user-edit-page.html", id=id)
+    """Display edit form with values filled in."""
+    user = User.query.get_or_404(id)
+    return render_template("user-edit-page.html", user = user)
 
 
 @app.post("/users/<int:id>/edit")
 def process_edit_form(id):
     """Edit user info and save to database."""
-    user = User.query.get(id)
+    user = User.query.get_or_404(id)
 
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
-    image_url = request.form.get("image-url")
+    image_url = request.form.get("image-url", DEFAULT_IMG_URL)
 
     user.first_name = first_name
     user.last_name = last_name
@@ -96,7 +101,7 @@ def process_edit_form(id):
 def delete_user(id):
     """Delete user from database."""
 
-    user = User.query.get(id)
+    user = User.query.get_or_404(id)
 
     db.session.delete(user)
     db.session.commit()

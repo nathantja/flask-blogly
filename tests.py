@@ -97,5 +97,6 @@ class UserViewTestCase(TestCase):
 
             html = resp.get_data(as_text=True)
 
+            self.assertEqual(resp.status_code, 200)
             self.assertNotIn("test1_first", html)
             self.assertNotIn("test1_last", html)

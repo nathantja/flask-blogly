@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block title %}Blogly: All Users{% endblock %}
+
 {% block content %}
 <h1>Users</h1>
 <ul>
@@ -7,7 +11,7 @@
 </ul>
 
 <form action="/users/new" method="GET">
-<button>Add user</button>
+<button class="btn btn-primary">Add user</button>
 </form>
 
 {% endblock %}
