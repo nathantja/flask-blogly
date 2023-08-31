@@ -44,7 +44,7 @@ def display_users():
 def new_user_form():
     """Display form to add new users."""
 
-    return render_template("new-user-form.html")
+    return render_template("user-new-form.html")
 
 @app.post("/users/new")
 def process_user_form():
@@ -53,8 +53,10 @@ def process_user_form():
     last_name = request.form.get("last-name")
     image_url = request.form.get("image-url", DEFAULT_IMG_URL)
 
-    print('image_url', image_url)
-    breakpoint()
+    if not image_url:
+        image_url = DEFAULT_IMG_URL
+    # print('image_url', image_url)
+    # breakpoint()
 
     user = User(first_name = first_name,
                 last_name = last_name,
@@ -86,7 +88,10 @@ def process_edit_form(id):
 
     first_name = request.form.get("first-name")
     last_name = request.form.get("last-name")
-    image_url = request.form.get("image-url", DEFAULT_IMG_URL)
+    image_url = request.form.get("image-url")
+
+    if not image_url:
+        image_url = DEFAULT_IMG_URL
 
     user.first_name = first_name
     user.last_name = last_name

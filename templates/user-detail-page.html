@@ -5,8 +5,8 @@
 {% block content %}
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
-<div class="container">
-<img class="img-fluid" src="{{ user.image_url }}">
+<div class="container-sm">
+<img class="w-10 p-1" src="{{ user.image_url }}"> <!--FIXME-->
 </div>
 
 <form action="/users/{{ user.id }}/edit" method="get">
@@ -17,6 +17,18 @@
 <button class="btn btn-danger">Delete</button>
 <!-- user page renders correctly! -->
 </form>
+
+<div>
+  <h2>Posts</h2>
+  <ul>
+    {% for post in posts %}
+    <li><a href="">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <form action="">
+    <a href="" class="btn btn-primary">Add Post</a>
+  </form>
+</div>
 
 {% endblock %}
 
