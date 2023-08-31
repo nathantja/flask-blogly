@@ -5,7 +5,8 @@ os.environ["DATABASE_URL"] = "postgresql:///blogly_test"
 from unittest import TestCase
 
 from app import app, db
-from models import DEFAULT_IMAGE_URL, User
+from models import User
+# DEFAULT_IMAGE_URL
 
 # Make Flask errors be real errors, rather than HTML pages with error info
 app.config['TESTING'] = True
@@ -32,8 +33,6 @@ class UserViewTestCase(TestCase):
         # User model below.
         User.query.delete()
 
-        self.client = app.test_client()
-
         test_user = User(
             first_name="test1_first",
             last_name="test1_last",
@@ -54,9 +53,49 @@ class UserViewTestCase(TestCase):
         db.session.rollback()
 
     def test_list_users(self):
-        with self.client as c:
-            resp = c.get("/users")
+        """Test for showing all users"""
+        with app.test_client() as client:
+            resp = client.get("/users")
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
+
             self.assertIn("test1_first", html)
             self.assertIn("test1_last", html)
+
+    def test_users_page_redirection(self):
+        """ Test for redirection to users page"""
+        with app.test_client() as client:
+            resp = client.get("/")
+
+            self.assertEqual(resp.status_code, 302)
+            self.assertEqual(resp.location, "/users")
+
+    def test_users_redirection_followed(self):
+        """ Tests the follow redirection"""
+        with app.test_client() as client:
+            resp = client.get("/", follow_redirects=True)
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn("test1_first", html)
+            self.assertIn("test1_last", html)
+
+    def test_user_page(self):
+        """Tests that specific user's page renders"""
+        with app.test_client() as client:
+            resp = client.get(f"/users/{self.user_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertIn("user page renders correctly!", html)
+            self.assertEqual(resp.status_code, 200)
+
+    def test_delete_user(self):
+        """Tests that user is deleted"""
+        with app.test_client() as client:
+            resp = client.post(f"/users/{self.user_id}/delete",
+                               follow_redirects=True)
+
+            html = resp.get_data(as_text=True)
+
+            self.assertNotIn("test1_first", html)
+            self.assertNotIn("test1_last", html)

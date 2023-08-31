@@ -8,6 +8,21 @@
 
 <form method="POST" action="/users/{{ user.id }}/delete">
 <button>Delete</button>
+<!-- user page renders correctly! -->
 </form>
 
 {% endblock %}
+
+<!--CODE REVIEW TODO:
+    1. replace all veiw function view request with get404 method
+    2. edit form page to include existing data
+    3. make sure all templates are extension from base
+      a. change page title
+    4. add a status code to delete test (200)
+  5. bootstrap and default images
+
+
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+-->
