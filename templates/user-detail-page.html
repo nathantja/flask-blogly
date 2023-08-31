@@ -6,16 +6,16 @@
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
 <div class="container-sm">
-<img class="w-10 p-1" src="{{ user.image_url }}"> <!--FIXME-->
+  <img class="w-10 p-1" src="{{ user.image_url }}"> <!--FIXME-->
 </div>
 
 <form action="/users/{{ user.id }}/edit" method="get">
-<button class="btn btn-primary">Edit</button>
+  <button class="btn btn-primary">Edit</button>
 </form>
 
 <form method="POST" action="/users/{{ user.id }}/delete">
-<button class="btn btn-danger">Delete</button>
-<!-- user page renders correctly! -->
+  <button class="btn btn-danger">Delete</button>
+  <!-- user page renders correctly! -->
 </form>
 
 <div>
@@ -25,15 +25,7 @@
     <li><a href="">{{ post.title }}</a></li>
     {% endfor %}
   </ul>
-  <form action="">
-    <a href="" class="btn btn-primary">Add Post</a>
-  </form>
+  <a href="/users/{{ user.id }}/posts/new" class="btn btn-primary">Add Post</a>
 </div>
 
 {% endblock %}
-
-<!--CODE REVIEW TODO:
-
-  5. bootstrap and default images
-
--->

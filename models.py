@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+
 def connect_db(app):
     """Connect to database."""
 
@@ -32,6 +33,7 @@ class User(db.Model):
         db.Text,
         nullable=True,)
 
+
 class Post(db.Model):
     """Blog post model"""
 
@@ -44,21 +46,17 @@ class Post(db.Model):
 
     title = db.Column(
         db.String(300),
-        nullable=False
-    )
+        nullable=False)
 
     content = db.Column(
         db.String(40000),
-        nullable=False
-    )
+        nullable=False)
 
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=db.func.now
-    )
+        default=db.func.now)
 
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey(User.id),
-    )
+        db.ForeignKey(User.id))

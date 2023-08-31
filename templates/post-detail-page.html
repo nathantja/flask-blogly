@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Blogly: {{ post.title }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ post.title }}</h1>
+
+<p>{{ post.content }}</p>
+
+<p><i>By {{ user.first_name }} {{ user.last_name }}</i></p>
+
+
+<a href="" class="btn btn-secondary">Cancel</a>
+
+<form action="/post/{{ user.id }}/edit" method="GET">
+<button class="btn btn-primary">Edit</button>
+</form>
+
+<form action="/post/{{ user.id }}/delete" method="POST" >
+<button class="btn btn-danger">Delete</button>
+</form>
+
+{% endblock %}

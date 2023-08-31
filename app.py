@@ -5,7 +5,7 @@ import os
 from flask import Flask, request, redirect, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
@@ -26,18 +26,20 @@ connect_db(app)
 
 DEFAULT_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/b/b5/Windows_10_Default_Profile_Picture.svg"
 
+
 @app.get("/")
 def homepage():
     """Redirect to list of all users."""
 
     return redirect("/users")
 
+
 @app.get("/users")
 def display_users():
     """Show all users."""
     users = User.query.all()
 
-    return render_template("user-listing.html", users = users)
+    return render_template("user-listing.html", users=users)
 
 
 @app.get("/users/new")
@@ -45,6 +47,7 @@ def new_user_form():
     """Display form to add new users."""
 
     return render_template("user-new-form.html")
+
 
 @app.post("/users/new")
 def process_user_form():
@@ -58,27 +61,28 @@ def process_user_form():
     # print('image_url', image_url)
     # breakpoint()
 
-    user = User(first_name = first_name,
-                last_name = last_name,
-                image_url = image_url)
+    user = User(first_name=first_name,
+                last_name=last_name,
+                image_url=image_url)
 
     db.session.add(user)
     db.session.commit()
 
     return redirect("/users")
 
+
 @app.get("/users/<int:id>")
 def show_user(id):
     """Displays user information"""
     user = User.query.get_or_404(id)
-    return render_template("user-detail-page.html", user = user)
+    return render_template("user-detail-page.html", user=user)
 
 
 @app.get("/users/<int:id>/edit")
 def edit_user(id):
     """Display edit form with values filled in."""
     user = User.query.get_or_404(id)
-    return render_template("user-edit-page.html", user = user)
+    return render_template("user-edit-page.html", user=user)
 
 
 @app.post("/users/<int:id>/edit")
@@ -112,3 +116,25 @@ def delete_user(id):
     db.session.commit()
 
     return redirect("/users")
+
+
+@app.get("/users/<int:id>/posts/new")
+def new_post_form(id):
+    """Render form to add post."""
+
+    user = User.query.get_or_404(id)
+
+    return render_template("post-new-form.html", user=user)
+
+
+@app.post("/users/<int:id>/posts/new")
+def process_post_form(id):
+    """Save post to database."""
+
+    post_title = request.form.get("content")
+    post_content = request.form.get("title")
+
+    post = Post(title=post_title, content=post_content, user_id=id)
+    db.session.add(post)
+
+    return redirect("/users/<int:id>")
