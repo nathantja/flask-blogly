@@ -110,6 +110,8 @@ def delete_user(id):
     """Delete user from database."""
     user = User.query.get_or_404(id)
 
+    Post.query.filter(Post.user_id == id).delete()
+
     db.session.delete(user)
     db.session.commit()
 

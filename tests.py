@@ -150,5 +150,13 @@ class UserViewTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertIn("test_title", html)
 
+    def test_delete_blog_post_redirection(self):
+        """Test for redirection when deleting post"""
+        with app.test_client() as client:
+            resp = client.post(f"/posts/{self.post_id}/delete",
+                               follow_redirects=True)
 
+            html = resp.get_data(as_text=True)
 
+            self.assertEqual(resp.status_code, 200)
+            self.assertNotIn("test_title", html)
