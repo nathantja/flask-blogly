@@ -26,6 +26,7 @@
 <div class="container user-posts">
   <h2>Posts</h2>
   <ul>
+  <!-- FIXME: send only the user instance -->
     {% for post in posts %}
     <li><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
     {% endfor %}

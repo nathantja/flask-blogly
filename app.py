@@ -110,6 +110,7 @@ def delete_user(id):
     """Delete user from database."""
     user = User.query.get_or_404(id)
 
+    # TODO: Deleting the user without deleting posts is still successful
     Post.query.filter(Post.user_id == id).delete()
 
     db.session.delete(user)
@@ -117,6 +118,8 @@ def delete_user(id):
 
     return redirect("/users")
 
+
+# POST ROUTES BEGIN HERE
 
 @app.get("/users/<int:id>/posts/new")
 def new_post_form(id):
@@ -158,13 +161,10 @@ def edit_post(post_id):
 @app.post("/posts/<int:post_id>/edit")
 def process_post_edit(post_id):
     """Edit post information and save to database"""
-    post_title = request.form.get("title")
-    post_content = request.form.get("content")
-
     post = Post.query.get_or_404(post_id)
 
-    post.title = post_title
-    post.content = post_content
+    post.title = request.form.get("title")
+    post.content = request.form.get("content")
 
     db.session.commit()
 
@@ -180,4 +180,5 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
 
+# TODO: add a flash message
     return redirect(f"/users/{user_id}")

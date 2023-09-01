@@ -10,15 +10,13 @@
 
 <p><i>By {{ post.user.first_name }} {{ post.user.last_name }}</i></p>
 
-
 <a href="/users/{{ post.user_id }}" class="btn btn-secondary">Cancel</a>
 
-<form action="/posts/{{ post.id }}/edit" method="GET">
-<button class="btn btn-primary">Edit</button>
-</form>
 
-<form action="/posts/{{ post.id }}/delete" method="POST" >
-<button class="btn btn-danger">Delete</button>
+<form>
+  <button formaction="/posts/{{ post.id }}/edit" formmethod="GET" class="btn btn-primary">Edit</button>
+
+  <button formaction="/posts/{{ post.id }}/delete" formmethod="POST" class="btn btn-danger">Delete</button>
 </form>
 
 {% endblock %}
